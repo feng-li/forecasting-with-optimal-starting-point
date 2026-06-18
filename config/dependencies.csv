@@ -1,0 +1,15 @@
+package,role,required_for,install_source,notes
+forecast,core,smoke workflows and forecast baselines,CRAN,
+tsfeatures,core,time-series feature extraction,CRAN,
+testthat,core,unit tests,CRAN,
+targets,workflow,targets smoke pipeline,CRAN,
+renv,environment,dependency lock and restore,CRAN,
+dplyr,full_reproduction,legacy full workflows,CRAN,
+Matrix,full_reproduction,legacy model workflows,CRAN,
+Ckmeans.1d.dp,full_reproduction,legacy feature workflows,CRAN,
+imputeTS,full_reproduction,legacy empirical imputation,CRAN,
+M4comp2018,full_reproduction,full M4 benchmark data,external/manual,"Not available from CRAN for this R version on 2026-06-18; installed from carlanetto/M4comp2018 GitHub source with Git LFS data objects"
+xgboost,full_reproduction,OSP paper model engine,CRAN,
+lightgbm,full_reproduction,OSP paper model engine,CRAN-or-external,May require extra system build tools
+gratis,full_reproduction,GRATIS empirical simulation,CRAN-or-external,May require archive or external source
+feasts,full_reproduction,legacy feature workflows,CRAN,

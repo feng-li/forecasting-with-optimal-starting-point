@@ -1,3 +1,12 @@
+load_single_object <- function(path) {
+  env <- new.env(parent = emptyenv())
+  object_names <- load(path, envir = env)
+  if (length(object_names) != 1L) {
+    stop("Expected exactly one object in ", path, call. = FALSE)
+  }
+  env[[object_names[[1L]]]]
+}
+
 library("xgboost")
 library("Matrix")
 library('Ckmeans.1d.dp')
@@ -15,8 +24,7 @@ dim(data)
 
 head(data)
 
-dlist= load('Quarterly_thetaf_datalist.RData')
-datalist=eval(parse(text = dlist ))
+datalist <- load_single_object('Quarterly_thetaf_datalist.RData')
 res=datalist[[1]]
 MASE=res[,,,6]
 m=5
@@ -57,7 +65,7 @@ for(i in seq(1,dim(MASE)[1]))
         }
     else
         {
-        min_value[is.na(min_value)]=100 
+        min_value[is.na(min_value)]=100
         realbestmin[i,]= whichmin(min_value)
     }
     }
@@ -78,7 +86,7 @@ for(i in seq(1,dim(MASE)[1]))
         }
     else
         {
-        mean_value[is.na(mean_value)]=100 
+        mean_value[is.na(mean_value)]=100
         realbestmean[i,]= whichmin(mean_value)
     }
     }
@@ -107,22 +115,22 @@ time_matrix[1,]=end_time-start_time
 
 start_time = Sys.time()
 
-dtrain_xg_min_reg <- xgb.DMatrix(data = as.matrix(train_data),label = as.matrix(train_label_min)) 
-dtrain_xg_min_cl <- xgb.DMatrix(data = as.matrix(train_data),label = as.matrix(as.factor(train_label_min)) )
+dtrain_xg_min_reg <- xgb.DMatrix(data = as.matrix(train_data),label = as.matrix(train_label_min))
+dtrain_xg_min_cl <- xgb.DMatrix(data = as.matrix(train_data),label = as.numeric(train_label_min) )
 
 dtrain_lg_min_reg <- lgb.Dataset(data = as.matrix(train_data),label = as.matrix(train_label_min))
-dtrain_lg_min_cl <- lgb.Dataset(data = as.matrix(train_data),label = as.matrix(as.factor(train_label_min)))
+dtrain_lg_min_cl <- lgb.Dataset(data = as.matrix(train_data),label = as.numeric(train_label_min))
 
 
 
 xgb_min_reg <- xgboost(data = dtrain_xg_min_reg, nround=100)
 
-xgb_min_cl <- xgboost(data = dtrain_xg_min_cl, nround=100, objective='multi:softmax',num_class=5)
+xgb_min_cl <- xgboost(data = dtrain_xg_min_cl, nround=100, objective='multi:softmax',num_class=m)
 
 lgb_min_reg <- lgb.train(data = dtrain_lg_min_reg, nrounds = 100)
 
 params <- list(objective = "multiclass",
-               num_class = 5, 
+               num_class = m,
                metric = "multi_logloss")
 lgb_min_cl <- lgb.train(data = dtrain_lg_min_cl,nrounds = 100,params=params)
 
@@ -131,20 +139,20 @@ time_matrix[2,]=end_time-start_time
 
 start_time = Sys.time()
 
-dtrain_xg_mean_reg <- xgb.DMatrix(data = as.matrix(train_data),label = as.matrix(train_label_mean)) 
-dtrain_xg_mean_cl <- xgb.DMatrix(data = as.matrix(train_data),label = as.matrix(as.factor(train_label_mean)) )
+dtrain_xg_mean_reg <- xgb.DMatrix(data = as.matrix(train_data),label = as.matrix(train_label_mean))
+dtrain_xg_mean_cl <- xgb.DMatrix(data = as.matrix(train_data),label = as.numeric(train_label_mean) )
 
 dtrain_lg_mean_reg <- lgb.Dataset(data = as.matrix(train_data),label = as.matrix(train_label_mean))
-dtrain_lg_mean_cl <- lgb.Dataset(data = as.matrix(train_data),label = as.matrix(as.factor(train_label_mean)))
+dtrain_lg_mean_cl <- lgb.Dataset(data = as.matrix(train_data),label = as.numeric(train_label_mean))
 
 xgb_mean_reg <- xgboost(data = dtrain_xg_mean_reg, nround=100)
 
-xgb_mean_cl <- xgboost(data = dtrain_xg_mean_cl, nround=100, objective='multi:softmax',num_class=5)
+xgb_mean_cl <- xgboost(data = dtrain_xg_mean_cl, nround=100, objective='multi:softmax',num_class=m)
 
 lgb_mean_reg <- lgb.train(data = dtrain_lg_mean_reg,nrounds = 100)
 
 params <- list(objective = "multiclass",
-               num_class = 5, 
+               num_class = m,
                metric = "multi_logloss")
 lgb_mean_cl <- lgb.train(data = dtrain_lg_mean_cl,params=params,nrounds = 100)
 
@@ -293,5 +301,3 @@ saveRDS(xgb_mean_reg, file = "Q_thetafxgbreg.rds")
 saveRDS(xgb_mean_cl, file = "Q_thetafxgbcls.rds")
 saveRDS(lgb_mean_reg, file = "Q_thetaflgbreg.rds")
 saveRDS(lgb_mean_cl, file = "Q_thetaflgbcls.rds")
-
-

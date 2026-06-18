@@ -30,9 +30,9 @@ data=Quarterly_M4
 #         for(i in 0:(n-1)){
 #             for(j in 0:(m-1)){
 #                 Y = ts(y[round((i*n_l+j*m_l)+1):y_l], end = end(y), frequency=freq)
-#                 M = ets(Y) 
+#                 M = ets(Y)
 #                 pd=forecast(M, h=h)
-#                 predh[k,(i+1),(j+1),] =pd$mean 
+#                 predh[k,(i+1),(j+1),] =pd$mean
 #                 pred[k,(i+1),(j+1),] = accuracy(pd, y_pred)[2,1:6]
 #             }
 #         }
@@ -71,9 +71,9 @@ pre_forecast_thetaf=function(data,freq,h,m,n,train_index)
         for(i in 0:(m-1)){
             for(j in 0:(n-1)){
                 Y = ts(y[round((i*m_l+j*n_l)+1):y_l], end = end(y), frequency=freq)
-                M = thetaf(Y,h=h) 
+                M = thetaf(Y,h=h)
                 pd=forecast(M, h=h)
-                predh[k,(i+1),(j+1),] =pd$mean 
+                predh[k,(i+1),(j+1),] =pd$mean
                 pred[k,(i+1),(j+1),] = accuracy(pd, y_pred)[2,1:6]
             }
         }

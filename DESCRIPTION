@@ -1,0 +1,31 @@
+Package: osp.tsp.research
+Title: Optimal Starting Point Time Series Forecasting Research Code
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Yiming", "Zhong", role = "aut"),
+    person("Yinuo", "Ren", role = "aut"),
+    person("Guangyao", "Cao", role = "aut"),
+    person("Feng", "Li", role = "aut"),
+    person("Haobo", "Qi", role = "aut")
+  )
+Description: Research code and reproducibility scaffolding for OSP-TSP forecasting experiments.
+License: file LICENSE
+Encoding: UTF-8
+Depends:
+    R (>= 4.2.0)
+Imports:
+    forecast,
+    tsfeatures
+Suggests:
+    testthat,
+    dplyr,
+    Matrix,
+    Ckmeans.1d.dp,
+    imputeTS,
+    M4comp2018,
+    xgboost,
+    lightgbm,
+    gratis,
+    feasts,
+    targets,
+    renv

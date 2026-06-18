@@ -1,0 +1,20 @@
+datasets:
+  - name: GDP
+    frequency: Yearly
+    file: data/raw/GDP_worldbank.csv
+  - name: industry
+    frequency: Quarterly
+    file: data/raw/industry.csv
+  - name: Confidence_index
+    frequency: Monthly
+    file: data/raw/Confidence_index100.csv
+  - name: exchange_rate
+    frequency: Monthly
+    file: data/raw/exchange_rate.csv
+  - name: Imports
+    frequency: Monthly
+    file: data/raw/Imports.csv
+segmentations:
+  - m: 5
+    'n': 4
+target_metric: MASE

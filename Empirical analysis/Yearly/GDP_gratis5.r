@@ -1,3 +1,12 @@
+load_single_object <- function(path) {
+  env <- new.env(parent = emptyenv())
+  object_names <- load(path, envir = env)
+  if (length(object_names) != 1L) {
+    stop("Expected exactly one object in ", path, call. = FALSE)
+  }
+  env[[object_names[[1L]]]]
+}
+
 library(tsfeatures)
 library(imputeTS)
 library(forecast)
@@ -205,7 +214,7 @@ filt_d = data.frame(y,loc_m)
 filt_0=filter(filt_d ,loc_m==0)
 m_l=count(filt_0)
 m_l=as.integer(m_l)
-length5[k,]=c(0,1*m_l,2*m_l,3*m_l,4*m_l)
+length5[k,]=seq.int(0, by = m_l, length.out = m)
     }
 
 
@@ -262,9 +271,7 @@ for(i in 1:ll)
 
 save(gratislist,file='gratislist_GDP_50.RData')
 
-loaddata=load('gratislist_GDP_50.RData')
-gratislist=eval(parse(text = loaddata))
-
+gratislist <- load_single_object('gratislist_GDP_50.RData')
 gratislist[[1]]
 
 predetsy = array(0,dim = c(ll*n_g,5,4,6))
@@ -455,14 +462,14 @@ train_label1=realbestmeanthetaf
 
 
 dtrain20 <- xgb.DMatrix(data = as.matrix(train_data),label = as.matrix(train_label)) 
-dtrain21 <- xgb.DMatrix(data = as.matrix(train_data),label = as.matrix(as.factor(train_label)))
+dtrain21 <- xgb.DMatrix(data = as.matrix(train_data),label = as.numeric(train_label))
 
 etsxgbreg  <- xgboost(data = dtrain20, nround=100)
 
-etsxgbcls  <- xgboost(data = dtrain21, nround=100, objective='multi:softmax',num_class=5)
+etsxgbcls  <- xgboost(data = dtrain21, nround=100, objective='multi:softmax',num_class=m)
 
 dtrain22 <- lgb.Dataset(data = as.matrix(train_data),label = as.matrix(train_label))
-dtrain23 <- lgb.Dataset(data = as.matrix(train_data),label = as.matrix(as.factor(train_label)))
+dtrain23 <- lgb.Dataset(data = as.matrix(train_data),label = as.numeric(train_label))
 
 # 定义参数列表
 params <- list(
@@ -475,7 +482,7 @@ etslgbreg  <- lgb.train(data = dtrain22,nrounds = 100,params = params)
 # 定义参数列表
 params <- list(
   objective = 'multiclass',
-  num_class = 5,
+  num_class = m,
   num_iterations = 100  # 使用 num_iterations 代替 nrounds
 )
 
@@ -486,14 +493,14 @@ etslgbcls <- lgb.train(
 )
 
 dtrain20 <- xgb.DMatrix(data = as.matrix(train_data),label = as.matrix(train_label1)) 
-dtrain21 <- xgb.DMatrix(data = as.matrix(train_data),label = as.matrix(as.factor(train_label1)))
+dtrain21 <- xgb.DMatrix(data = as.matrix(train_data),label = as.numeric(train_label1))
 
 thetafxgbreg  <- xgboost(data = dtrain20, nround=100)
 
-thetafxgbcls  <- xgboost(data = dtrain21, nround=100, objective='multi:softmax',num_class=5)
+thetafxgbcls  <- xgboost(data = dtrain21, nround=100, objective='multi:softmax',num_class=m)
 
 dtrain22 <- lgb.Dataset(data = as.matrix(train_data),label = as.matrix(train_label1))
-dtrain23 <- lgb.Dataset(data = as.matrix(train_data),label = as.matrix(as.factor(train_label1)))
+dtrain23 <- lgb.Dataset(data = as.matrix(train_data),label = as.numeric(train_label1))
 
 # 定义参数列表
 params <- list(
@@ -506,7 +513,7 @@ thetaflgbreg  <- lgb.train(data = dtrain22,nrounds = 100,params = params)
 # 定义参数列表
 params <- list(
   objective = 'multiclass',
-  num_class = 5,
+  num_class = m,
   num_iterations = 100  # 使用 num_iterations 代替 nrounds
 )
 
@@ -661,7 +668,5 @@ alltest[10,]=apply(thetaflgbregres,2,mean)
 
 
 write.csv(alltest,'GDP_gratis_12.csv')
-
-
 
 

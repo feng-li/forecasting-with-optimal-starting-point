@@ -226,7 +226,7 @@ filt_d = data.frame(y,loc_m)
 filt_0=filter(filt_d ,loc_m==0)
 m_l=count(filt_0)
 m_l=as.integer(m_l)
-length5[k,]=c(0,1*m_l,2*m_l,3*m_l,4*m_l)
+length5[k,]=seq.int(0, by = m_l, length.out = m)
     }
 
 
@@ -300,11 +300,11 @@ test_label_nnetar=realbestmeannnetar[index==2,]
 train_models<-function(train_data,train_label)
 {
     dtrain_reg <- xgb.DMatrix(data = as.matrix(train_data),label = as.matrix(train_label)) 
-    dtrain_cl<- xgb.DMatrix(data = as.matrix(train_data),label = as.matrix(as.factor(train_label)))
+    dtrain_cl<- xgb.DMatrix(data = as.matrix(train_data),label = as.numeric(train_label))
     xgbreg  <- xgboost(data = dtrain_reg, nround=100)
-    xgbcls  <- xgboost(data = dtrain_cl, nround=100, objective='multi:softmax',num_class=5)
+    xgbcls  <- xgboost(data = dtrain_cl, nround=100, objective='multi:softmax',num_class=m)
     dtrain_reg <- lgb.Dataset(data = as.matrix(train_data),label = as.matrix(train_label))
-    dtrain_cl <- lgb.Dataset(data = as.matrix(train_data),label = as.matrix(as.factor(train_label)))
+    dtrain_cl <- lgb.Dataset(data = as.matrix(train_data),label = as.numeric(train_label))
     # 定义参数列表
     params_reg <- list(
       objective = "regression",
@@ -314,7 +314,7 @@ train_models<-function(train_data,train_label)
     # 定义参数列表
     params_cl <- list(
       objective = 'multiclass',
-      num_class = 5,
+      num_class = m,
       num_iterations = 100  # 使用 num_iterations 代替 nrounds
     )
     # 使用参数列表进行训练

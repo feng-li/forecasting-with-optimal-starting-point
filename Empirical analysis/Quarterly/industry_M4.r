@@ -211,7 +211,7 @@ filt_d = data.frame(y,loc_m)
 filt_0=filter(filt_d ,loc_m==0)
 m_l=count(filt_0)
 m_l=as.integer(m_l)
-length5[k,]=c(0,1*m_l,2*m_l,3*m_l,4*m_l)
+length5[k,]=seq.int(0, by = m_l, length.out = m)
     }
 
 

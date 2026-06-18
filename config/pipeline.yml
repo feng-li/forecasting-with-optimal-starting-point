@@ -1,0 +1,10 @@
+m4_frequency: Yearly
+m4_base_model: ets
+m4_m: 5
+m4_n: 4
+m4_max_series: 20
+m4_osp_engines:
+  - xgboost
+m4_osp_tasks:
+  - classification
+m4_results_root: results

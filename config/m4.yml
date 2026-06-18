@@ -1,0 +1,18 @@
+seed: 100
+train_fraction: 0.7
+frequencies:
+  - Yearly
+  - Quarterly
+  - Monthly
+  - Weekly
+  - Daily
+  - Hourly
+segmentations:
+  - m: 5
+    'n': 4
+  - m: 10
+    'n': 4
+base_models:
+  - ets
+  - thetaf
+target_metric: MASE

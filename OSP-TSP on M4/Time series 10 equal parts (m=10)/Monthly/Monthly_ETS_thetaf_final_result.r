@@ -1,23 +1,26 @@
+load_single_object <- function(path) {
+  env <- new.env(parent = emptyenv())
+  object_names <- load(path, envir = env)
+  if (length(object_names) != 1L) {
+    stop("Expected exactly one object in ", path, call. = FALSE)
+  }
+  env[[object_names[[1L]]]]
+}
+
 library(forecast)
 library(M4comp2018)
 library(dplyr)
 
-etsl=load('Monthly_ets_datalist.RData')
-ets_datalist <- eval(parse(text = etsl))
-thetafl=load('Monthly_thetaf_datalist.RData')
-thetaf_datalist <- eval(parse(text = thetafl))
-
+ets_datalist <- load_single_object('Monthly_ets_datalist.RData')
+thetaf_datalist <- load_single_object('Monthly_thetaf_datalist.RData')
 ets_predh=ets_datalist[[2]]
 thetaf_predh=thetaf_datalist[[2]]
 
 ets_pred_res=ets_datalist[[1]]
 thetaf_pred_res=thetaf_datalist[[1]]
 
-etsoptl=load('Monthly_ets_opt_pre_result.RData')
-ets_opt_pre_list<- eval(parse(text = etsoptl))
-thetafoptl=load('Monthly_thetaf_opt_pre_result.RData')
-thetaf_opt_pre_list<- eval(parse(text = thetafoptl))
-
+ets_opt_pre_list <- load_single_object('Monthly_ets_opt_pre_result.RData')
+thetaf_opt_pre_list <- load_single_object('Monthly_thetaf_opt_pre_result.RData')
 time_matrix <- matrix(0,ncol = 3, nrow =3)
 colnames(time_matrix) <- c("user_time", "system_time", "elapsed_time")
 start_time = Sys.time()
@@ -98,7 +101,7 @@ filt_d = data.frame(y,loc_m)
 filt_0=filter(filt_d ,loc_m==0)
 m_l=count(filt_0)
 m_l=as.integer(m_l)
-length5[k,]=c(0,1*m_l,2*m_l,3*m_l,4*m_l)
+length5[k,]=seq.int(0, by = m_l, length.out = m)
     }
 
 
@@ -215,7 +218,7 @@ etsregminres=predres_mul(etsregmin,data,ets_pr_min[,c(2,4)],lengthtest,h,testind
 etsclsmeanres=predres_mul(etsclsmean,data,ets_pr_mean[,c(1,3)],lengthtest,h,testindex)
 etsregmeanres=predres_mul(etsregmean,data,ets_pr_mean[,c(2,4)],lengthtest,h,testindex)
 
-etspred_change<- aperm(ets_predh[1:datalength,1:m,1:n,1:h], c(1, 3, 2, 4))  
+etspred_change<- aperm(ets_predh[1:datalength,1:m,1:n,1:h], c(1, 3, 2, 4))
 # 使用array函数将其转换为新的形状
 etspred_change <- array(etspred_change, dim = c(datalength, m*n, h))
 
@@ -338,7 +341,7 @@ thetafregminres=predres_mul(thetafregmin,data,thetaf_pr_min[,c(2,4)],lengthtest,
 thetafclsmeanres=predres_mul(thetafclsmean,data,thetaf_pr_mean[,c(1,3)],lengthtest,h,testindex)
 thetafregmeanres=predres_mul(thetafregmean,data,thetaf_pr_mean[,c(2,4)],lengthtest,h,testindex)
 
-thetafpred_change<- aperm(thetaf_predh[1:datalength,1:m,1:n,1:h], c(1, 3, 2, 4))  
+thetafpred_change<- aperm(thetaf_predh[1:datalength,1:m,1:n,1:h], c(1, 3, 2, 4))
 # 使用array函数将其转换为新的形状
 thetafpred_change <- array(thetafpred_change, dim = c(datalength, m*n, h))
 
@@ -411,5 +414,3 @@ write.csv(thetafall,'thetaf_Monthly_final_res.csv')
 time_matrix
 
 write.csv(time_matrix,'Monthly_time_matrix.csv')
-
-

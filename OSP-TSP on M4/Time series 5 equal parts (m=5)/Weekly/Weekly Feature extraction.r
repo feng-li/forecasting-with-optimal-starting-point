@@ -30,7 +30,7 @@ Feature_extraction=function(data,train_index)
         } else {
                 test_matrix[i,] = end_time - start_time
             }
-    
+
 }
     return(list(feature_matrix, train_matrix, test_matrix))
     }

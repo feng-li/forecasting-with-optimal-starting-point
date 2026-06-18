@@ -1,3 +1,35 @@
 *.RData
 *.rds
 **/.ipynb_checkpoints/**
+
+# R/session artifacts
+.Rhistory
+.RData
+.Rproj.user/
+renv/library/
+renv/staging/
+
+# targets pipeline artifacts
+_targets/
+
+# Local raw data copies prepared from legacy inputs
+data/raw/*.csv
+
+# Generated result artifacts
+results/intermediate/**
+results/models/**
+results/tables/*.csv
+!results/intermediate/.gitkeep
+!results/models/.gitkeep
+!results/tables/.gitkeep
+
+# LaTeX build outputs
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.xdv
